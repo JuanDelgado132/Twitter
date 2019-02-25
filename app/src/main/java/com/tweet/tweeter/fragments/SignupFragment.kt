@@ -73,14 +73,7 @@ class SignupFragment : Fragment(), RequestTaskListener{
         return view
 
     }
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is LoginFragment.OnFragmentInteractionListener) {
-           // listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
-    }
+
 
     override fun onDetach() {
         super.onDetach()
@@ -185,7 +178,26 @@ class SignupFragment : Fragment(), RequestTaskListener{
         val imageBytes = outputStream.toByteArray()
         return Base64.encodeToString(imageBytes, 0)
     }
-    override fun onRequestFinished() {
+
+    /**
+     * @author Juan Delgado
+     * @param result
+     * Takes the JSON response and parses it into a user variable that is then given to the User global object.
+     *
+     */
+    override fun onRequestFinished(result: String?) {
+        //Check that result is not null.
+        if(result != null){
+            //Parse the string into a JSONObject
+            val responseObject = JSONObject(result)
+            //Extract the data.
+            val user = User(responseObject.getInt("id"),responseObject.getString("email"), responseObject.getString("firstName")
+                , responseObject.getString("lastName"), responseObject.getString("username"), responseObject.getString("password")
+                , responseObject.getString("profilePicture"))
+            //Save it
+            App.user = user
+        }
+
         enableSpinner(false)
         if(activity != null) {
             val twitterFeedIntent = Intent(activity, TwitterFeed::class.java)

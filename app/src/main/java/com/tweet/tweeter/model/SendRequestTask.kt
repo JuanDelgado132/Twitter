@@ -56,12 +56,12 @@ class SendRequestTask(private val requestData: ByteArray?) : AsyncTask<URL, Stri
                 val reader = BufferedReader(InputStreamReader(inputStream, "utf-8"))
 
                 result = reader.readText()
-                val responseObject = JSONObject(result)
-
-                val user = User(responseObject.getInt("id"),responseObject.getString("email"), responseObject.getString("firstName")
-                    , responseObject.getString("lastName"), responseObject.getString("username"), responseObject.getString("password")
-                    , responseObject.getString("profilePicture"))
-                App.user = user
+//                val responseObject = JSONObject(result)
+//
+//                val user = User(responseObject.getInt("id"),responseObject.getString("email"), responseObject.getString("firstName")
+//                    , responseObject.getString("lastName"), responseObject.getString("username"), responseObject.getString("password")
+//                    , responseObject.getString("profilePicture"))
+//                App.user = user
 
 
 
@@ -75,7 +75,7 @@ class SendRequestTask(private val requestData: ByteArray?) : AsyncTask<URL, Stri
     //Once signup has been successful. We will launch to the twitter feed.
     override fun onPostExecute(result: String?) {
         if (requestListener != null){
-            requestListener!!.onRequestFinished()
+            requestListener!!.onRequestFinished(result)
 
         }
         super.onPostExecute(result)

@@ -8,5 +8,5 @@ interface RequestTaskListener {
     /**
      * Callback method that the async task will use to update the main UI.
      */
-    fun onRequestFinished()
+    fun onRequestFinished(result: String?)
 }

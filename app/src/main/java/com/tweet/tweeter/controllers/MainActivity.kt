@@ -17,7 +17,7 @@ import com.tweet.tweeter.interfaces.RequestTaskListener
 import com.tweet.tweeter.utils.Constants
 import kotlin.math.sign
 
-class MainActivity : AppCompatActivity(), LoginFragment.OnFragmentInteractionListener{
+class MainActivity : AppCompatActivity(){
 
     //My fragment manager and transaction
     private lateinit var  fragManager: FragmentManager
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), LoginFragment.OnFragmentInteractionLis
         setContentView(R.layout.activity_main)
         if(savedInstanceState == null) {
             fragManager = supportFragmentManager
-            fragTransaction = fragManager.beginTransaction()
+           // fragTransaction = fragManager.beginTransaction()
             loginFragment = LoginFragment()
             signupFragment = SignupFragment()
            // fragTransaction.add(R.id.tweeterContainer, signupFragment, Constants.SIGN_UP_TAG)
@@ -64,9 +64,6 @@ class MainActivity : AppCompatActivity(), LoginFragment.OnFragmentInteractionLis
 
     }
 
-    override fun onFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     enum class FRAGMENT{
         LOGIN, SIGNUP
