@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(){
             signupFragment = SignupFragment()
            // fragTransaction.add(R.id.tweeterContainer, signupFragment, Constants.SIGN_UP_TAG)
            // fragTransaction.commit()
-            launchLoginFragment()
+            launchSignupFragment()
 
         }
 

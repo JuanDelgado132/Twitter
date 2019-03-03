@@ -111,7 +111,7 @@ class SignupFragment : Fragment(), RequestTaskListener{
                 val url = URL(Constants.REGISTER_URL)
                 //Initialize the asynctask, so that it can run in the background.
                 val task = SendRequestTask(postData)
-
+                task.requestListener = this
                 task.execute(url)
 
             }
@@ -189,7 +189,8 @@ class SignupFragment : Fragment(), RequestTaskListener{
         //Check that result is not null.
         if(result != null){
             //Parse the string into a JSONObject
-            val responseObject = JSONObject(result)
+            var responseObject = JSONObject(result)
+            responseObject = responseObject.getJSONObject("user")
             //Extract the data.
             val user = User(responseObject.getInt("id"),responseObject.getString("email"), responseObject.getString("firstName")
                 , responseObject.getString("lastName"), responseObject.getString("username"), responseObject.getString("password")
@@ -199,14 +200,14 @@ class SignupFragment : Fragment(), RequestTaskListener{
         }
 
         enableSpinner(false)
-        if(activity != null) {
-            val twitterFeedIntent = Intent(activity, TwitterFeed::class.java)
-            activity!!.startActivity(twitterFeedIntent)
-            activity!!.finish()
-        }
-        else {
-            Toast.makeText(activity, "Something went wrong, please try again!", Toast.LENGTH_LONG).show()
-        }
+//        if(activity != null) {
+//            val twitterFeedIntent = Intent(activity, TwitterFeed::class.java)
+//            activity!!.startActivity(twitterFeedIntent)
+//            activity!!.finish()
+//        }
+//        else {
+//            Toast.makeText(activity, "Something went wrong, please try again!", Toast.LENGTH_LONG).show()
+//        }
 
     }
 }

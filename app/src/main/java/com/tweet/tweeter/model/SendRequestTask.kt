@@ -2,6 +2,7 @@ package com.tweet.tweeter.model
 
 
 import android.os.AsyncTask
+import android.util.Log
 import com.tweet.tweeter.controllers.App
 import com.tweet.tweeter.interfaces.RequestTaskListener
 import org.json.JSONObject
@@ -56,6 +57,7 @@ class SendRequestTask(private val requestData: ByteArray?) : AsyncTask<URL, Stri
                 val reader = BufferedReader(InputStreamReader(inputStream, "utf-8"))
 
                 result = reader.readText()
+                Log.d("Response", result);
 //                val responseObject = JSONObject(result)
 //
 //                val user = User(responseObject.getInt("id"),responseObject.getString("email"), responseObject.getString("firstName")
@@ -73,13 +75,14 @@ class SendRequestTask(private val requestData: ByteArray?) : AsyncTask<URL, Stri
 
     }
     //Once signup has been successful. We will launch to the twitter feed.
+
     override fun onPostExecute(result: String?) {
         if (requestListener != null){
+            Log.d("CALLING MY LISTENER", "I AM CALLING")
             requestListener!!.onRequestFinished(result)
 
         }
+
         super.onPostExecute(result)
-
     }
-
 }

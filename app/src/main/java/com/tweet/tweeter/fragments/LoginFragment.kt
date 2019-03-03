@@ -22,17 +22,8 @@ import org.json.JSONObject
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [LoginFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [LoginFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
+
 class LoginFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private lateinit var emailField: EditText
     private lateinit var passField: EditText
 //    private var listener: OnFragmentInteractionListener? = null
