@@ -9,7 +9,9 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
+import android.preference.PreferenceGroup
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,6 +25,7 @@ import com.tweet.tweeter.R
 import com.tweet.tweeter.controllers.App
 import com.tweet.tweeter.controllers.MainActivity
 import com.tweet.tweeter.controllers.TwitterFeed
+import com.tweet.tweeter.interfaces.Operations
 import com.tweet.tweeter.interfaces.RequestTaskListener
 import com.tweet.tweeter.model.Preferences
 import com.tweet.tweeter.model.SendRequestTask
@@ -35,7 +38,8 @@ import java.net.URL
 import java.nio.charset.Charset
 
 
-class SignupFragment : Fragment(), RequestTaskListener{
+class SignupFragment : Fragment(), RequestTaskListener, Operations{
+
 
 
     private lateinit var  emailField: EditText
@@ -45,11 +49,6 @@ class SignupFragment : Fragment(), RequestTaskListener{
     private lateinit var  usernameField: EditText
     private lateinit var  pictureField: ImageView
     private lateinit var user: User
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -75,10 +74,6 @@ class SignupFragment : Fragment(), RequestTaskListener{
     }
 
 
-    override fun onDetach() {
-        super.onDetach()
-       // listener = null
-    }
     private fun setupListeners(view: View){
         val signupButton = view.findViewById<Button>(R.id.signupBtn)
         signupButton.setOnClickListener {
@@ -186,28 +181,48 @@ class SignupFragment : Fragment(), RequestTaskListener{
      *
      */
     override fun onRequestFinished(result: String?) {
+        var code: Int = -1
         //Check that result is not null.
         if(result != null){
             //Parse the string into a JSONObject
-            var responseObject = JSONObject(result)
-            responseObject = responseObject.getJSONObject("user")
-            //Extract the data.
-            val user = User(responseObject.getInt("id"),responseObject.getString("email"), responseObject.getString("firstName")
-                , responseObject.getString("lastName"), responseObject.getString("username"), responseObject.getString("password")
-                , responseObject.getString("profilePicture"))
-            //Save it
-            App.user = user
+            val responseObject = JSONObject(result)
+            code = responseObject.getInt("code")
+            if(code == 1) {
+                val userJsonObject = responseObject.getJSONObject("user")
+                //Extract the data.
+                val user = User(
+                    userJsonObject.getInt("id"),
+                    userJsonObject.getString("email"),
+                    userJsonObject.getString("firstName")
+                    ,
+                    userJsonObject.getString("lastName"),
+                    userJsonObject.getString("username"),
+                    userJsonObject.getString("password")
+                    ,
+                    userJsonObject.getString("profilePicture")
+                )
+                //Save it
+                App.user = user
+                App.preferences.isProfilePicSet = false
+                App.preferences.picture = ""
+            } else {
+                showToast(activity, responseObject.getString("error"))
+            }
         }
 
         enableSpinner(false)
-//        if(activity != null) {
-//            val twitterFeedIntent = Intent(activity, TwitterFeed::class.java)
-//            activity!!.startActivity(twitterFeedIntent)
-//            activity!!.finish()
-//        }
-//        else {
-//            Toast.makeText(activity, "Something went wrong, please try again!", Toast.LENGTH_LONG).show()
-//        }
+        if(code == 1 ) {
+            if (activity != null) {
+                val twitterFeedIntent = Intent(activity, TwitterFeed::class.java)
+                activity!!.startActivity(twitterFeedIntent)
+                activity!!.finish()
+            } else {
+                //showToast(activity, "Something went wrong, please try again!")
+            }
+        }
 
+    }
+    override fun showToast(activity: FragmentActivity?, message: String) {
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 }
